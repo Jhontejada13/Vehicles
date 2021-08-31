@@ -18,121 +18,121 @@ namespace Vehicles.API.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.DocumentTypes.ToListAsync());
-        }
-
-        // GET: DocumentTypes/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(DocumentType documentType)
-        {
-            if (ModelState.IsValid)
+            public async Task<IActionResult> Index()
             {
-                try
+                return View(await _context.DocumentTypes.ToListAsync());
+            }
+
+            // GET: DocumentTypes/Create
+            public IActionResult Create()
+            {
+                return View();
+            }
+
+            [HttpPost]
+            [ValidateAntiForgeryToken]
+            public async Task<IActionResult> Create(DocumentType documentType)
+            {
+                if (ModelState.IsValid)
                 {
-                    _context.Add(documentType);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (DbUpdateException dbUpdateException)
-                {
-                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                    try
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe este tipo de vehículo");
+                        _context.Add(documentType);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
                     }
-                    else
+                    catch (DbUpdateException dbUpdateException)
                     {
-                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                        if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                        {
+                            ModelState.AddModelError(string.Empty, "Ya existe este tipo de vehículo");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
 
+                        }
                     }
-                }
-                catch (Exception exception)
-                {
-                    ModelState.AddModelError(string.Empty, exception.Message);
-                }
-            }
-
-            return View(documentType);
-        }
-
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            DocumentType documentType = await _context.DocumentTypes.FindAsync(id);
-            if (documentType == null)
-            {
-                return NotFound();
-            }
-            return View(documentType);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, DocumentType documentType)
-        {
-            if (id != documentType.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(documentType);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-
-                }
-                catch (DbUpdateException dbUpdateException)
-                {
-                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                    catch (Exception exception)
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe este tipo de vehículo");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
-
+                        ModelState.AddModelError(string.Empty, exception.Message);
                     }
                 }
-                catch (Exception exception)
+
+                return View(documentType);
+            }
+
+            public async Task<IActionResult> Edit(int? id)
+            {
+                if (id == null)
                 {
-                    ModelState.AddModelError(string.Empty, exception.Message);
+                    return NotFound();
                 }
 
+                DocumentType documentType = await _context.DocumentTypes.FindAsync(id);
+                if (documentType == null)
+                {
+                    return NotFound();
+                }
+                return View(documentType);
             }
-            return View(documentType);
-        }
 
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
+            [HttpPost]
+            [ValidateAntiForgeryToken]
+            public async Task<IActionResult> Edit(int id, DocumentType documentType)
             {
-                return NotFound();
+                if (id != documentType.Id)
+                {
+                    return NotFound();
+                }
+
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        _context.Update(documentType);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+
+                    }
+                    catch (DbUpdateException dbUpdateException)
+                    {
+                        if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                        {
+                            ModelState.AddModelError(string.Empty, "Ya existe este tipo de vehículo");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        ModelState.AddModelError(string.Empty, exception.Message);
+                    }
+
+                }
+                return View(documentType);
             }
 
-            DocumentType documentType = await _context.DocumentTypes.FirstOrDefaultAsync(m => m.Id == id);
-
-            if (documentType == null)
+            public async Task<IActionResult> Delete(int? id)
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            _context.DocumentTypes.Remove(documentType);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+                DocumentType documentType = await _context.DocumentTypes.FirstOrDefaultAsync(m => m.Id == id);
+
+                if (documentType == null)
+                {
+                    return NotFound();
+                }
+
+                _context.DocumentTypes.Remove(documentType);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
     }
 }
