@@ -37,7 +37,7 @@ namespace Vehicles.API.Data.Entities
         //TODO: Fix the images path
         [Display(Name = "Foto")]
         public string ImageFullPath => ImageId == Guid.Empty
-            ? $"https://localhost:44395/images/noimage.png"
+            ? $"https://localhost:44395/images/no-image.png"
             : $"https://vehiclesprep.azurewebsites.net/images/{ImageId}";
 
         [Display(Name = "Tipo de usuario")]
@@ -46,9 +46,14 @@ namespace Vehicles.API.Data.Entities
         [Display(Name = "Nombre Completo")]
         public string FullName => $"{FirstName} {LastName}";
 
-        public ICollection<User> Users { get; set; }
+        //public ICollection<User> Users { get; set; }
 
         public ICollection<History> Histories { get; set; }
+
+        public ICollection<Vehicle> Vehicles { get; set; }
+
+        [Display(Name = "# Vehículos")]
+        public int VehiclesCount => Vehicles == null ? 0 : Vehicles.Count;
 
     }
 }
