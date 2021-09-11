@@ -6,7 +6,7 @@
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
 <p>
-    <a asp-action="Create" class="btn btn-outline-primary">Nuevo</a>
+    <a asp-action="Create" class="btn btn-primary">Nuevo</a>
 </p>
 <div class="row">
     <div class="col-md-12">
@@ -24,6 +24,7 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.Price)
                             </th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,10 +33,10 @@
                             <tr>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Description)
-                                </td
+                                </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Price)
-                                </td>>
+                                </td>
                                 <td>
                                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning">Editar</a>
                                     <button data-id="@item.Id" class="btn btn-outline-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Borrar</button>
@@ -51,7 +52,7 @@
 
 <partial name="_DeleteDialog" />
 
-@section Scripts{
+@section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="/js/deleteDialog.js"></script>
@@ -59,7 +60,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#MyTable').DataTable({
-                "lenguage": {
+                "language": {
                     "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
                 },
                 "aLengthMenu": [
@@ -67,8 +68,7 @@
                     [25, 50, 100, 200, "Todos"]
                 ]
             });
-
-            //Delete Item
+            // Delete item
             sc_deleteDialog.openModal('deleteItem', true, 'btnYesDelete', '/Procedures/Delete/', false);
         });
     </script>
