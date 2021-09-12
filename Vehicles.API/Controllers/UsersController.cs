@@ -174,5 +174,26 @@ namespace Vehicles.API.Controllers
 
             return View(user);
         }
+
+        public async Task<IActionResult> AddVehicle(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            User user = await _context.Users
+                .Include(x => x.Vehicles)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
+        }
+
+
     }
 }
