@@ -43,6 +43,11 @@ namespace Vehicles.API.Models
         [Display(Name = "Foto")]
         public Guid ImageId { get; set; }
 
+        [Display(Name = "Foto")]
+        public string ImageFullPath => ImageId == Guid.Empty
+            ? $"https://localhost:44395/images/no-image.png"
+            : $"https://vehiclesjhon.blob.core.windows.net/users/{ImageId}";
+
         [Display(Name = "Tipo de usuario")]
         public UserType UserType { get; set; }
 

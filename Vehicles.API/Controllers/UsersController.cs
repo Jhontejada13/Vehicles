@@ -77,13 +77,74 @@ namespace Vehicles.API.Controllers
 
                 //Response response = _mailHelper.SendMail(model.Email, "Vehicles - Confirmación de cuenta", $"<h1>Vehicles - Confirmación de cuenta</h1>" +
                 //    $"Para habilitar el usuario, " +
-                    //$"por favor hacer clic en el siguiente enlace: </br></br><a href = \"{tokenLink}\">Confirmar Email</a>");
+                //$"por favor hacer clic en el siguiente enlace: </br></br><a href = \"{tokenLink}\">Confirmar Email</a>");
 
                 return RedirectToAction(nameof(Index));
             }
 
             model.DocumentTypes = _combosHerlper.GetCombosDocumentsType();
             return View(model);
+        }
+
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            User user = await _userHelper.GetUserAsync(Guid.Parse(id));
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            UserViewModel model = _convertHelper.ToUserViewModel(user);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(UserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+
+                Guid imageId = model.ImageId;
+
+                if (model.ImageFile != null)
+                {
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
+                }
+
+                User user = await _convertHelper.ToUserAsync(model, imageId, false);
+
+                await _userHelper.UpdateUserAsync(user);
+                return RedirectToAction(nameof(Index));
+
+            }
+
+            model.DocumentTypes = _combosHerlper.GetCombosDocumentsType();
+            return View(model);
+        }
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            User user = await _userHelper.GetUserAsync(Guid.Parse(id));
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            await _userHelper.DeleteUserAsync(user);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
