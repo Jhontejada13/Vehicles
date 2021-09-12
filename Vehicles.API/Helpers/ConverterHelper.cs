@@ -32,7 +32,6 @@ namespace Vehicles.API.Helpers
                 PhoneNumber = model.PhoneNumber,
                 UserName = model.Email,
                 UserType = model.UserType,
-                Vehicles = model.Vehicles
             };
         }
 
@@ -42,7 +41,6 @@ namespace Vehicles.API.Helpers
             {
                 Address = user.Address,
                 Document = user.Document,
-                DocumentType = user.DocumentType,
                 DocumentTypeId = user.DocumentType.Id,
                 DocumentTypes = _combosHelper.GetCombosDocumentsType(),
                 Email = user.Email,
@@ -50,9 +48,7 @@ namespace Vehicles.API.Helpers
                 Id = user.Id,
                 LastName = user.LastName,
                 PhoneNumber = user.PhoneNumber,
-                UserName = user.Email,
                 UserType = user.UserType,
-                Vehicles = user.Vehicles
             };
         }
     }
