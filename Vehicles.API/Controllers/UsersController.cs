@@ -21,7 +21,6 @@ namespace Vehicles.API.Controllers
         private readonly ICombosHelper _combosHerlper;
         private readonly IConverterHelper _convertHelper;
         private readonly IBlobHelper _blobHelper;
-        private object _converterHelper;
 
         public UsersController(DataContext context, IUserHelper userHerlper, ICombosHelper combosHerlper, IConverterHelper convertHelper, IBlobHelper blobHelper)
         {
@@ -365,10 +364,68 @@ namespace Vehicles.API.Controllers
             }
 
 
-            await _blobHelper.DeleteBlobAsync(vehiclePhoto.ImageId, "vehiclesphotos");
+            try
+            {
+                await _blobHelper.DeleteBlobAsync(vehiclePhoto.ImageId, "vehiclesphotos");
+            }
+            catch {}
             _context.VehiclePhotos.Remove(vehiclePhoto);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(EditVehicle), new { id = vehiclePhoto.Vehicle.Id });
+        }
+
+        public async Task<IActionResult> AddVehicleImage(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Vehicle vehicle = await _context.Vehicles
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+
+            VehiclePhotoViewModel model = new()
+            {
+                VehicleId = vehicle.Id
+            };
+
+            return View(model);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddVehicleImage(VehiclePhotoViewModel vehiclePhotoViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                Guid imageId = await _blobHelper.UploadBlobAsync(vehiclePhotoViewModel.ImageFile, "vehiclephotos");
+                Vehicle vehicle = await _context.Vehicles
+                    .Include(x => x.VehiclePhotos)
+                    .FirstOrDefaultAsync(x => x.Id == vehiclePhotoViewModel.VehicleId);
+
+                if (vehicle.VehiclePhotos == null)
+                {
+                    vehicle.VehiclePhotos = new List<VehiclePhoto>();
+                }
+
+                vehicle.VehiclePhotos.Add(new VehiclePhoto
+                {
+                    ImageId = imageId
+                });
+
+                _context.Vehicles.Update(vehicle);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(EditVehicle), new { id = vehicle.Id });
+            }
+
+            return View(vehiclePhotoViewModel);
+
         }
 
     }
