@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Vehicles.API.Data.Entities;
 
 namespace Vehicles.API.Models
 {
@@ -13,16 +14,16 @@ namespace Vehicles.API.Models
         [Display(Name = "Tipo de vehículos")]
         [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar un tipo de vehículo")]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        public int vehiculeTypeId { get; set; }
+        public int VehicleTypeId { get; set; }
 
-        public IEnumerable<SelectListItem> VehiculeTypes { get; set; }
+        public IEnumerable<SelectListItem> VehicleTypes { get; set; }
 
         [Display(Name = "Marca")]
         [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar una marca")]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         public int BrandId { get; set; }
 
-        public IEnumerable<SelectListItem> BrandTypes { get; set; }
+        public IEnumerable<SelectListItem> Brands { get; set; }
 
         [Display(Name = "Modelo")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
@@ -53,5 +54,7 @@ namespace Vehicles.API.Models
 
         [Display(Name = "Foto")]
         public IFormFile ImageFile { get; set; }
+
+        public ICollection<VehiclePhoto> VehiclePhotos { get; set; }
     }
 }

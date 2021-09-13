@@ -53,7 +53,7 @@ namespace Vehicles.API.Helpers
             };
         }
 
-        public async Task<Vehicle> ToVehicleAsync(VehicleViewModel model, Guid imageId, bool isNew)
+        public async Task<Vehicle> ToVehicleAsync(VehicleViewModel model, bool isNew)
         {
             return new Vehicle
             {
@@ -62,9 +62,9 @@ namespace Vehicles.API.Helpers
                 Id = isNew ? 0 : model.Id,
                 Line = model.Line,
                 Model = model.Model,
-                Plaque = model.Plaque,
+                Plaque = model.Plaque.ToUpper(),
                 Remarks = model.Remarks,
-                VehicleType = await _context.VehicleTypes.FindAsync(model.vehiculeTypeId)
+                VehicleType = await _context.VehicleTypes.FindAsync(model.VehicleTypeId)
             };
         }
 
@@ -73,14 +73,17 @@ namespace Vehicles.API.Helpers
             return new VehicleViewModel
             {
                 BrandId = vehicle.Brand.Id,
-                BrandTypes = _combosHelper.GetBrands(),
+                Brands = _combosHelper.GetBrands(),
                 Color = vehicle.Color,
                 Id = vehicle.Id,
                 Line = vehicle.Line,
                 Model = vehicle.Model,
-                Plaque = vehicle.Plaque,
+                Plaque = vehicle.Plaque.ToUpper(),
                 Remarks = vehicle.Remarks,
-                UserId = vehicle.User.Id
+                UserId = vehicle.User.Id,
+                VehiclePhotos = vehicle.VehiclePhotos,
+                VehicleTypeId = vehicle.VehicleType.Id,
+                VehicleTypes = _combosHelper.GetCombosVehicleTypes(),
             };
         }
     }
