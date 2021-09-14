@@ -28,6 +28,7 @@ namespace Vehicles.API.Data
             await CheckUserAsync("1010", "Admin", "Mecánico", "adminmecanico@yopmail.com", "3105318279", "Avenida siempre viva", UserType.Admin);
             await CheckUserAsync("2020", "Otro", "Ejemplo", "otroejemplo@yopmail.com", "3105318279", "Avenida siempre viva", UserType.User);
             await CheckUserAsync("3030", "Un", "Ejemplo Mas", "unejemplomas@yopmail.com", "3105318279", "Avenida siempre viva", UserType.User);
+            await CheckUserAsync("4040", "sandra", "Mecánica", "sandra@yopmail.com", "3105318279", "Avenida siempre viva", UserType.Admin);
 
         }
 
