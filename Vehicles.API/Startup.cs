@@ -39,6 +39,12 @@ namespace Vehicles.API
                 x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/NotAuthorized";
+                options.AccessDeniedPath = "/Account/NotAuthorized";
+            });
+
             services.AddTransient<SeedDb>();
 
             services.AddScoped<IUserHelper, UserHelper>();
@@ -62,6 +68,8 @@ namespace Vehicles.API
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            app.UseStatusCodePagesWithRedirects("/error/{0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthentication();
