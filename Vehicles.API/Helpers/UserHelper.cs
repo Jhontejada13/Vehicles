@@ -90,6 +90,11 @@ namespace Vehicles.API.Helpers
             return await _userManager.GenerateEmailConfirmationTokenAsync(user);
         }
 
+        public async Task<string> GeneratePasswordResetTokenAsync(User user)
+        {
+            return await _userManager.GeneratePasswordResetTokenAsync(user);
+        }
+
         public async Task<User> GetUserAsync(string email)
         {
             return await _context.Users
@@ -129,6 +134,11 @@ namespace Vehicles.API.Helpers
             await _signInManager.SignOutAsync();
         }
 
+        public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password)
+        {
+            return await _userManager.ResetPasswordAsync(user, token, password);
+        }
+
         public async Task<IdentityResult> UpdateUserAsync(User user)
         {
             User currentUser = await GetUserAsync(user.Email);
@@ -140,6 +150,11 @@ namespace Vehicles.API.Helpers
             currentUser.PhoneNumber = user.PhoneNumber;
             currentUser.ImageId = user.ImageId;
             return await _userManager.UpdateAsync(currentUser);
+        }
+
+        public async Task<SignInResult> ValidatePasswordAsync(User user, string password)
+        {
+            return await _signInManager.CheckPasswordSignInAsync(user, password, false);
         }
     }
 }
