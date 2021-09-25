@@ -32,6 +32,7 @@ namespace Vehicles.API.Data
             modelBuilder.Entity<Procedure>().HasIndex(x => x.Description).IsUnique();
             modelBuilder.Entity<VehicleType>().HasIndex(x => x.Description).IsUnique();
             modelBuilder.Entity<Vehicle>().HasIndex(x => x.Plaque).IsUnique();
+            modelBuilder.Entity<History>().HasOne(x => x.Vehicle).WithMany(x => x.Histories).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

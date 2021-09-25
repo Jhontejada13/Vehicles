@@ -26,13 +26,16 @@ namespace Vehicles.API
 
             services.AddIdentity<User, IdentityRole>(x =>
             {
+                x.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+                x.SignIn.RequireConfirmedEmail = true;
                 x.User.RequireUniqueEmail = true;
                 x.Password.RequireDigit = false;
                 x.Password.RequiredUniqueChars = 0;
                 x.Password.RequireLowercase = false;
                 x.Password.RequireNonAlphanumeric = false;
                 x.Password.RequireUppercase = false;
-            }).AddEntityFrameworkStores<DataContext>();
+            }).AddDefaultTokenProviders()
+            .AddEntityFrameworkStores<DataContext>();
 
             services.AddDbContext<DataContext>(x =>
             {
@@ -54,6 +57,8 @@ namespace Vehicles.API
             services.AddScoped<IBlobHelper, BlobHelper>();
 
             services.AddScoped<IConverterHelper, ConverterHelper>();
+
+            services.AddScoped<IMailHelper, MailHelper>();
 
         }
 
