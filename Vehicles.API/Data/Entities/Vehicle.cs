@@ -40,7 +40,7 @@ namespace Vehicles.API.Data.Entities
         public string Color { get; set; }
 
         [Display(Name = "Propietario")]
-        //[JsonIgnore]
+        [JsonIgnore]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public User User { get; set; }
 
