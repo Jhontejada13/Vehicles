@@ -27,7 +27,7 @@ namespace Vehicles.API.Controllers.API
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Procedure>>> GetProcedures()
         {
-            return await _context.Procedures.ToListAsync();
+            return await _context.Procedures.OrderBy(x => x.Description).ToListAsync();
         }
 
         [HttpGet("{id}")]
@@ -56,20 +56,23 @@ namespace Vehicles.API.Controllers.API
             try
             {
                 await _context.SaveChangesAsync();
+                return NoContent();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateException dbUpdateException)
             {
-                if (!ProcedureExists(id))
+                if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                 {
-                    return NotFound();
+                   return BadRequest("Ya existe este procedimiento");
                 }
                 else
                 {
-                    throw;
+                    return BadRequest(dbUpdateException.InnerException.Message);
                 }
             }
-
-            return NoContent();
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }            
         }
 
         [HttpPost]
@@ -90,15 +93,28 @@ namespace Vehicles.API.Controllers.API
                 return NotFound();
             }
 
-            _context.Procedures.Remove(procedure);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Procedures.Remove(procedure);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                {
+                    return BadRequest("Ya existe este procedimiento");
+                }
+                else
+                {
+                    return BadRequest(dbUpdateException.InnerException.Message);
+                }
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
 
             return NoContent();
-        }
-
-        private bool ProcedureExists(int id)
-        {
-            return _context.Procedures.Any(e => e.Id == id);
         }
     }
 }
